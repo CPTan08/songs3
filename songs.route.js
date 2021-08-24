@@ -60,7 +60,7 @@ router.put("/:id", (req, res) => {
   res.status(200).send(newSongInfo);
 });
 
-router.delete("/songs/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   console.log(req.params.id);
   const songToDelete = songs.find(
     (song) => song.id === parseInt(req.params.id)

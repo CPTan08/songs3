@@ -34,3 +34,17 @@ it("PUT /song/:id should return the new song", async () => {
     .send(updatedSong)
     .expect(200);
 });
+
+//test delete song
+
+it("DELETE /song/:id should remove 2nd song", async () => {
+  const deletedSong = {
+    id: 2,
+    name: "anotherSongName",
+    artist: "anotherArtist",
+  };
+
+  const resp = await request(app).delete("/songs/2").expect(200);
+
+  expect(resp.body).toMatchObject(deletedSong);
+});
