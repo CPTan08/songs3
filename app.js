@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
 typeof express.json(); // 'function'
 
 const songs = [
@@ -26,11 +27,12 @@ app.get("/songs", (req, res) => {
 app.get("/song/:id", (req, res) => {
   let id = parseInt(req.params.id);
 
-  console.log(id);
+  // console.log(id);
 
-  console.log(songs);
+  // console.log(songs);
 
-  res.send(songs.filter((song) => (id ? id === song.id : true)));
+  const filter = songs.filter((song) => (id ? id === song.id : true));
+  res.send(filter[0]);
   //   .filter((item) => (req.query.type ? req.query.type === item.type : true))
 });
 
@@ -57,9 +59,9 @@ app.put("/song/:id", (req, res) => {
     (song) => song.id === parseInt(req.params.id)
   );
 
-  songToUpdate.name="req.body.name";
-  songToUpdate.name="req.body.name";
-   res.status(200).send(newSongInfo);
+  songToUpdate.name = "req.body.name";
+  songToUpdate.name = "req.body.name";
+  res.status(200).send(newSongInfo);
 });
 
 app.delete("/songs/:id", (req, res) => {
@@ -76,4 +78,9 @@ app.delete("/songs/:id", (req, res) => {
 
   res.status(200).send(songToDelete);
 });
+
+app.get("/", (req, res) => {
+  res.send("Welcome to my homepage");
+});
+
 module.exports = app;
