@@ -48,3 +48,12 @@ it("DELETE /song/:id should remove 2nd song", async () => {
 
   expect(resp.body).toMatchObject(deletedSong);
 });
+
+//test error handling
+it("PUT Error handling when missing song id", async () => {
+  const updatedSong = { name: "updateSongName", artist: "updateSongArtist" };
+  const err = await request(app)
+    .put("/songs/100")
+    .send(updatedSong)
+    .expect(400);
+});

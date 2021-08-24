@@ -23,13 +23,8 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   let id = parseInt(req.params.id);
 
-  // console.log(id);
-
-  // console.log(songs);
-
   const filter = songs.filter((song) => (id ? id === song.id : true));
   res.send(filter[0]);
-  //   .filter((item) => (req.query.type ? req.query.type === item.type : true))
 });
 
 router.post("/", (req, res) => {
@@ -44,12 +39,25 @@ router.post("/", (req, res) => {
   res.status(201).send(newSong);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", (req, res, next) => {
+  let resultIndex = songs.findIndex(
+    (song) => song.id === parseInt(req.params.id)
+  );
+
+  //error handling for put
+  if (resultIndex === -1) {
+    const err = new Error("Invalid Id");
+
+    // console.log(err);
+    err.statusCode = 400;
+    next(err);
+  }
   let newSongInfo = {
     id: req.params.id,
     name: req.body.name,
     artist: req.body.artist,
   };
+
   console.log(req.body);
   const songToUpdate = songs.find(
     (song) => song.id === parseInt(req.params.id)
@@ -66,13 +74,17 @@ router.delete("/:id", (req, res) => {
     (song) => song.id === parseInt(req.params.id)
   );
 
-  //error handling here
-
   const indexToDelete = songs.indexOf(songToDelete);
 
   songs.splice(indexToDelete, 1);
 
   res.status(200).send(songToDelete);
+});
+
+//Handle Router error
+router.use((err, req, res, next) => {
+  if (err.statusCode === 400) res.status(err.statusCode).send(err.message);
+  else next(err);
 });
 
 module.exports = router;
